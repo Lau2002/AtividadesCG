@@ -158,12 +158,12 @@ int main()
 		// Poligono Preenchido - GL_TRIANGLES
 		
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 18);
+		glDrawArrays(GL_TRIANGLES, 0, 72);
 
 		// Chamada de desenho - drawcall
 		// CONTORNO - GL_LINE_LOOP
 		
-		glDrawArrays(GL_POINTS, 0, 18);
+		glDrawArrays(GL_POINTS, 0, 72);
 		glBindVertexArray(0);
 
 		// Troca os buffers da tela
