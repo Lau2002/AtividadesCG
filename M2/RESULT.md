@@ -1,7 +1,7 @@
 # Comandos do Teclado
 
 ## Seleção do cubo
-- C: Muda de entidade
+- C: Muda o cubo selecionado
 
 ## Rotação do cubo selecionado
 - X: Liga/desliga rotação no eixo X.
