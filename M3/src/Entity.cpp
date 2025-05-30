@@ -9,11 +9,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-// stb_image para carregar texturas
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-// Construtor
+
 Entity::Entity(float x, float y, float z,
                glm::vec3 baseColor,
                float initialScale,
@@ -30,7 +30,6 @@ Entity::Entity(float x, float y, float z,
 }
 
 
-// Inicializa o modelo: carrega .obj, .mtl, textura, shaders
 void Entity::initialize()
 {
     VAO = loadModelWithTexture(objFilePath, mtlFilePath, textureFilePath, nVertices, textureID);
@@ -41,7 +40,6 @@ void Entity::initialize()
     setupShaders();
 }
 
-// Função para carregar modelo + textura (obj + mtl + png)
 int Entity::loadModelWithTexture(const std::string &objFilePath,
                                  const std::string &mtlFilePath,
                                  const std::string &textureFilePath,
@@ -52,7 +50,6 @@ int Entity::loadModelWithTexture(const std::string &objFilePath,
     std::vector<glm::vec2> temp_uvs;
     std::vector<unsigned int> vertexIndices, uvIndices;
 
-    // Passo 1: carregar .obj (mesmo que antes)
     std::ifstream file(objFilePath);
     if (!file.is_open())
     {
@@ -128,7 +125,7 @@ int Entity::loadModelWithTexture(const std::string &objFilePath,
         }
     }
 
-    // Passo 2: carregar textura usando textureFilePath recebido como parâmetro
+    
     if (!textureFilePath.empty())
     {
         outTextureID = loadTexture(textureFilePath);
@@ -143,7 +140,7 @@ int Entity::loadModelWithTexture(const std::string &objFilePath,
         outTextureID = 0;
     }
 
-    // Passo 3: criar VAO e VBO
+    
     GLuint VBO, VAO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -167,7 +164,7 @@ int Entity::loadModelWithTexture(const std::string &objFilePath,
     return VAO;
 }
 
-// Função para ler o .mtl e extrair nome da textura (map_Kd)
+
 std::string Entity::parseMTLForTexture(const std::string &mtlFilePath)
 {
     std::ifstream file(mtlFilePath);
@@ -191,11 +188,11 @@ std::string Entity::parseMTLForTexture(const std::string &mtlFilePath)
     return "";
 }
 
-// Função que carrega a textura usando stb_image
+
 GLuint Entity::loadTexture(const std::string &texturePath)
 {
     int width, height, nrChannels;
-    stbi_set_flip_vertically_on_load(true); // inverte verticalmente para OpenGL
+    stbi_set_flip_vertically_on_load(true); 
     unsigned char *data = stbi_load(texturePath.c_str(), &width, &height, &nrChannels, 0);
     if (!data)
     {
@@ -219,7 +216,6 @@ GLuint Entity::loadTexture(const std::string &texturePath)
     glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
 
-    // configurações de filtro e wrap
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
@@ -232,7 +228,7 @@ GLuint Entity::loadTexture(const std::string &texturePath)
     return textureID;
 }
 
-// Configura shaders para usar textura
+
 void Entity::setupShaders()
 {
     const GLchar *vertexShaderSource = R"glsl(
@@ -282,7 +278,6 @@ void Entity::setupShaders()
     glDeleteShader(fragmentShader);
 }
 
-// Função para checar erros de compilação e linkagem
 void Entity::checkCompileErrors(GLuint shader, std::string type)
 {
     GLint success;
@@ -309,7 +304,6 @@ void Entity::checkCompileErrors(GLuint shader, std::string type)
     }
 }
 
-// Método draw atualizado para bindar a textura e passar uniform sampler2D
 void Entity::draw()
 {
     glUseProgram(shaderProgram);
@@ -318,12 +312,10 @@ void Entity::draw()
     model = glm::translate(model, position);
     model = glm::scale(model, glm::vec3(scaleFactor));
 
-    // Aplicar rotação inicial (em radianos)
     model = glm::rotate(model, initialRotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
     model = glm::rotate(model, initialRotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::rotate(model, initialRotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
-    // Aplicar rotação animada (quando ativada)
     float angle = static_cast<float>(glfwGetTime());
     if (rotateX)
         model = glm::rotate(model, angle, glm::vec3(1.0f, 0.0f, 0.0f));
