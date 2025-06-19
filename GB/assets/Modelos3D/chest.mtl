@@ -1,0 +1,11 @@
+# Created by Kenney (www.kenney.nl)
+
+newmtl colormap
+Ns 233.659760
+Ka 0.500000 0.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+Kd 1 1 1
+map_Kd Textures/colormap.png
+
