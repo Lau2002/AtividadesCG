@@ -9,8 +9,8 @@
 - Z: Liga/desliga rotação no eixo Z.
 
 ## Escala do cubo selecionado
-- [ (Colchete Esquerdo): Diminui a escala.
-- ] (Colchete Direito): Aumenta a escala.
+- O: Diminui a escala.
+- I: Aumenta a escala.
 
 ## Translação do cubo selecionado
 - A: Move para cima no eixo Y.

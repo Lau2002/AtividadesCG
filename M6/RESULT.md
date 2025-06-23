@@ -6,11 +6,11 @@
 - Z: Liga/desliga rotação no eixo Z.
 
 ## Escala da entidade selecionada
-- [ (Colchete Esquerdo): Diminui a escala (mínimo 0.1).
-- ] (Colchete Direito): Aumenta a escala (máximo 0.8).
+- O: Diminui a escala (mínimo 0.1).
+- I: Aumenta a escala (máximo 0.8).
 
 ## Translação da entidade selecionada
-- I: Move para a esquerda no eixo X.
+- U: Move para a esquerda no eixo X.
 - J: Move para a direita no eixo X.
 
 ## Movimento da Câmera

@@ -360,7 +360,7 @@ void Entity::checkCompileErrors(GLuint shader, std::string type)
 }
 
 
-void Entity::draw() {
+void Entity::draw(const glm::vec3& lightPosition) {
     glUseProgram(shaderProgram);
 
     glm::mat4 model = glm::mat4(1.0f);
@@ -379,7 +379,7 @@ void Entity::draw() {
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(viewMatrix));
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
-    glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"), 1.0f, 1.2f, -0.5f);
+    glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"), lightPosition.x, lightPosition.y, lightPosition.z);
     glUniform3f(glGetUniformLocation(shaderProgram, "camPos"), camPos.x, camPos.y, camPos.z);
     glUniform1f(glGetUniformLocation(shaderProgram, "ka"), ka);
     glUniform1f(glGetUniformLocation(shaderProgram, "kd"), kd);
@@ -394,6 +394,7 @@ void Entity::draw() {
     glDrawArrays(GL_TRIANGLES, 0, nVertices);
     glBindVertexArray(0);
 }
+
 
 void Entity::toggleRotateX()
 {
@@ -418,7 +419,7 @@ void Entity::toggleRotateZ()
 
 void Entity::scaleUp()
 {
-    scaleFactor = std::min(scaleFactor + 0.1f, 0.8f);
+    scaleFactor = std::min(scaleFactor + 0.1f, 1.0f);
 }
 
 void Entity::scaleDown()

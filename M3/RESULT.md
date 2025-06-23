@@ -1,8 +1,7 @@
 # Comandos do Teclado
 
 ## Seleção de entidade
-- Seta para Direita: Seleciona a próxima entidade.
-- Seta para Esquerda: Seleciona a entidade anterior.
+- C: Seleciona a próxima entidade.
 
 ## Rotação da entidade selecionada
 - X: Liga/desliga rotação no eixo X.
@@ -10,8 +9,8 @@
 - Z: Liga/desliga rotação no eixo Z.
 
 ## Escala da entidade selecionada
-- [ (Colchete Esquerdo): Diminui a escala (mínimo 0.1).
-- ] (Colchete Direito): Aumenta a escala (máximo 0.8).
+- O: Diminui a escala (mínimo 0.1).
+- I: Aumenta a escala (máximo 0.8).
 
 ## Translação da entidade selecionada
 - A: Move para cima no eixo Y.

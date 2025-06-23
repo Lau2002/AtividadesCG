@@ -1,0 +1,130 @@
+{
+  "camera": {
+    "position": [0.0, 0.0, 5.0],
+    "front": [0.0, 0.0, -1.0],
+    "up": [0.0, 1.0, 0.0],
+    "fov": 80.0
+  },
+  "light": {
+    "position": [1.0, 1.2, -0.5]
+  },
+  "entities": [
+    {
+      "obj": "../assets/Modelos3D/patch-grass.obj",
+      "mtl": "../assets/Modelos3D/patch-grass.mtl",
+      "texture": "../assets/tex/colormap.png",
+      "position": [0.0, -1.5, 0.0],
+      "rotation": [0.0, 0.0, 0.0],
+      "scale": 0.9,
+      "trajectory": ""
+    },
+    {
+      "obj": "../assets/Modelos3D/tower-complete-large.obj",
+      "mtl": "../assets/Modelos3D/tower-complete-large.mtl",
+      "texture": "../assets/tex/colormap.png",
+      "position": [-1.2, -1.3, 1.0],
+      "rotation": [0.0, 125.0, 0.0],
+      "scale": 0.23,
+      "trajectory": ""
+    },
+    {
+      "obj": "../assets/Modelos3D/platform-planks.obj",
+      "mtl": "../assets/Modelos3D/platform-planks.mtl",
+      "texture": "../assets/tex/colormap.png",
+      "position": [-1.0, -1.3, 0.05],
+      "rotation": [0.0, -50.0, 0.0],
+      "scale": 0.3,
+      "trajectory": ""
+    },
+    {
+      "obj": "../assets/Modelos3D/tower-complete-small.obj",
+      "mtl": "../assets/Modelos3D/tower-complete-small.mtl",
+      "texture": "../assets/tex/colormap.png",
+      "position": [-0.8, -1.3, -0.9],
+      "rotation": [0.0, 35.0, 0.0],
+      "scale": 0.23,
+      "trajectory": ""
+    },
+    {
+      "obj": "../assets/Modelos3D/ship-pirate-medium.obj",
+      "mtl": "../assets/Modelos3D/ship-pirate-medium.mtl",
+      "texture": "../assets/tex/colormap.png",
+      "position": [-0.3, -2.5, -2.5],
+      "rotation": [0.0, 60.0, 0.0],
+      "scale": 0.3,
+      "trajectory": "../assets/trajeto.txt"
+    },
+    {
+      "obj": "../assets/Modelos3D/palm-detailed-bend.obj",
+      "mtl": "../assets/Modelos3D/palm-detailed-bend.mtl",
+      "texture": "../assets/tex/colormap.png",
+      "position": [1.5, -1.5, 0.5],
+      "rotation": [0.0, -55.0, 0.0],
+      "scale": 0.3,
+      "trajectory": ""
+    },
+    {
+      "obj": "../assets/Modelos3D/chest.obj",
+      "mtl": "../assets/Modelos3D/chest.mtl",
+      "texture": "../assets/tex/colormap.png",
+      "position": [1.0, -1.3, 0.5],
+      "rotation": [0.0, 195.0, 0.0],
+      "scale": 0.3,
+      "trajectory": ""
+    },
+    {
+      "obj": "../assets/Modelos3D/structure-roof.obj",
+      "mtl": "../assets/Modelos3D/structure-roof.mtl",
+      "texture": "../assets/tex/colormap.png",
+      "position": [0.0, -1.3, 1.0],
+      "rotation": [0.0, 200.0, 0.0],
+      "scale": 0.3,
+      "trajectory": ""
+    },
+    {
+      "obj": "../assets/Modelos3D/crate-bottles.obj",
+      "mtl": "../assets/Modelos3D/crate-bottles.mtl",
+      "texture": "../assets/tex/colormap.png",
+      "position": [0.0, -1.3, 1.0],
+      "rotation": [0.0, 200.0, 0.0],
+      "scale": 0.3,
+      "trajectory": ""
+    },
+    {
+      "obj": "../assets/Modelos3D/cannon-mobile.obj",
+      "mtl": "../assets/Modelos3D/cannon-mobile.mtl",
+      "texture": "../assets/tex/colormap.png",
+      "position": [0.3, -1.3, -1.1],
+      "rotation": [0.0, 180.0, 0.0],
+      "scale": 0.3,
+      "trajectory": ""
+    },
+    {
+      "obj": "../assets/Modelos3D/structure-platform.obj",
+      "mtl": "../assets/Modelos3D/structure-platform.mtl",
+      "texture": "../assets/tex/colormap.png",
+      "position": [1.3, -2.0, -1.0],
+      "rotation": [0.0, 50.0, 0.0],
+      "scale": 0.3,
+      "trajectory": ""
+    },
+    {
+      "obj": "../assets/Modelos3D/structure-platform.obj",
+      "mtl": "../assets/Modelos3D/structure-platform.mtl",
+      "texture": "../assets/tex/colormap.png",
+      "position": [1.8, -2.0, -1.55],
+      "rotation": [0.0, 50.0, 0.0],
+      "scale": 0.3,
+      "trajectory": ""
+    },
+    {
+      "obj": "../assets/Modelos3D/structure-platform.obj",
+      "mtl": "../assets/Modelos3D/structure-platform.mtl",
+      "texture": "../assets/tex/colormap.png",
+      "position": [2.3, -2.0, -2.1],
+      "rotation": [0.0, 50.0, 0.0],
+      "scale": 0.3,
+      "trajectory": ""
+    }
+  ]
+}

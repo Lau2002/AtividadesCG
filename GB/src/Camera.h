@@ -10,6 +10,8 @@ public:
     glm::vec3 right;
     glm::vec3 worldUp;
 
+    float fov = 100.0f;
+
     float yaw;
     float pitch;
     float speed;

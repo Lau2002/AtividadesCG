@@ -19,7 +19,7 @@ public:
            glm::vec3 initialRotation = glm::vec3(0.0f));
 
     void initialize();
-    void draw();
+    void draw(const glm::vec3& lightPosition);
     void setViewProjection(const glm::mat4 &view, const glm::mat4 &projection, const glm::vec3 &cameraPosition);
 
     void toggleRotateX();
