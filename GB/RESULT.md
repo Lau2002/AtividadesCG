@@ -1,3 +1,19 @@
+# Instruções de Compilação
+
+1. **Clone o Repositório**
+   ```sh
+   git clone <link_do_repositorio>
+   cd <nome_do_repositorio>
+   ```
+
+2. **Setup do Projeto**
+   👉 [Getting Started - CGCCHibrido](https://github.com/fellowsheep/CGCCHibrido/blob/main/GettingStarted.md)
+
+3. **Execute o Executável**
+   ```sh
+   ./OpenGLDemo
+   ```
+
 # Comandos do Teclado
 
 ## Seleção de entidade
