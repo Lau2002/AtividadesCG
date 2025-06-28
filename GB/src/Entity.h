@@ -7,8 +7,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-
-class Entity {
+class Entity
+{
 public:
     Entity(float x, float y, float z,
            glm::vec3 baseColor,
@@ -18,8 +18,10 @@ public:
            const std::string &textureFilePath,
            glm::vec3 initialRotation = glm::vec3(0.0f));
 
+    bool followBezier = false;
+
     void initialize();
-    void draw(const glm::vec3& lightPosition);
+    void draw(const glm::vec3 &lightPosition);
     void setViewProjection(const glm::mat4 &view, const glm::mat4 &projection, const glm::vec3 &cameraPosition);
 
     void toggleRotateX();
@@ -32,11 +34,13 @@ public:
     void moveForward();
     void moveBackward();
 
-    void loadTrajectory(const std::string& trajectoryFile);
-    void updateTrajectory();
+    void loadBezierControlPoints(const std::string &file);
+    void updateBezierTrajectory();
 
 private:
     glm::vec3 position;
+    glm::vec3 rotation;
+
     glm::vec3 baseColor;
     glm::vec3 initialRotation;
     float scaleFactor;
@@ -54,9 +58,11 @@ private:
 
     float ka, kd, ks, shininess;
 
-    std::vector<glm::vec3> trajectoryPoints;
-    int currentPointIndex;
-    bool followTrajectory;
+    std::vector<glm::vec3> bezierControlPoints;
+    std::vector<glm::vec3> bezierRotations;
+
+    float bezierT = 0.0f;
+    float bezierSpeed = 0.001f;
 
     int loadModelWithTexture(const std::string &objFilePath,
                              const std::string &mtlFilePath,
@@ -64,7 +70,7 @@ private:
                              int &outVertices,
                              GLuint &outTextureID);
 
-    void loadMaterial(const std::string& mtlFilePath);
+    void loadMaterial(const std::string &mtlFilePath);
     GLuint loadTexture(const std::string &texturePath);
 
     void setupShaders();

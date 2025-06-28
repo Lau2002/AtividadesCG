@@ -50,7 +50,7 @@
       "mtl": "../assets/Modelos3D/ship-pirate-medium.mtl",
       "texture": "../assets/tex/colormap.png",
       "position": [-0.3, -2.5, -2.5],
-      "rotation": [0.0, 60.0, 0.0],
+      "rotation": [0.0, 100.0, 0.0],
       "scale": 0.3,
       "trajectory": "../assets/trajeto.txt"
     },

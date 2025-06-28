@@ -28,12 +28,12 @@ Entity::Entity(float x, float y, float z,
       VAO(0), textureID(0), nVertices(0), shaderProgram(0),
       objFilePath(objFilePath), mtlFilePath(mtlFilePath), textureFilePath(textureFilePath),
       initialRotation(initialRotation),
-      ka(0.1f), kd(0.5f), ks(0.5f), shininess(10.0f),
-      currentPointIndex(0), followTrajectory(false)
+      ka(0.1f), kd(0.5f), ks(0.5f), shininess(10.0f)
 {
 }
 
-void Entity::setViewProjection(const glm::mat4 &view, const glm::mat4 &projection, const glm::vec3 &cameraPosition) {
+void Entity::setViewProjection(const glm::mat4 &view, const glm::mat4 &projection, const glm::vec3 &cameraPosition)
+{
     viewMatrix = view;
     projectionMatrix = projection;
     camPos = cameraPosition;
@@ -51,43 +51,73 @@ void Entity::initialize()
     setupShaders();
 }
 
-void Entity::loadTrajectory(const std::string& trajectoryFile) {
-    std::ifstream file(trajectoryFile);
-    if (!file.is_open()) {
-        std::cerr << "Failed to open trajectory file: " << trajectoryFile << std::endl;
+glm::vec3 cubicBezier(glm::vec3 p0, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, float t)
+{
+    float u = 1.0f - t;
+    return u * u * u * p0 +
+           3 * u * u * t * p1 +
+           3 * u * t * t * p2 +
+           t * t * t * p3;
+}
+
+void Entity::loadBezierControlPoints(const std::string &file)
+{
+    std::ifstream in(file);
+    if (!in.is_open())
+    {
+        std::cerr << "Erro ao abrir arquivo de curva Bézier: " << file << std::endl;
         return;
     }
 
+    bezierControlPoints.clear();
+    bezierRotations.clear();
+
     std::string line;
-    while (std::getline(file, line)) {
+    while (std::getline(in, line))
+    {
         std::istringstream ss(line);
-        float x, y, z;
-        char comma;
-        if (ss >> x >> comma >> y >> comma >> z) {
-            trajectoryPoints.emplace_back(x, y, z);
+        float px, py, pz;
+        float rx, ry, rz;
+        if (ss >> px >> py >> pz >> rx >> ry >> rz)
+        {
+            bezierControlPoints.emplace_back(px, py, pz);
+            bezierRotations.emplace_back(rx, ry, rz);
+        }
+        else
+        {
+            std::cerr << "Linha do arquivo mal formatada: " << line << std::endl;
         }
     }
-    file.close();
 
-    if (!trajectoryPoints.empty()) {
-        position = trajectoryPoints[0];
-        currentPointIndex = 0;
-        followTrajectory = true;
+    in.close();
+
+    if (bezierControlPoints.size() == 4 && bezierRotations.size() == 4)
+    {
+        position = bezierControlPoints[0];
+        rotation = bezierRotations[0];
+        bezierT = 0.0f;
+        followBezier = true;
+    }
+    else
+    {
+        std::cerr << "São necessários exatamente 4 pontos de controle e 4 rotações para a curva Bézier." << std::endl;
     }
 }
 
-void Entity::updateTrajectory() {
-    if (!followTrajectory || trajectoryPoints.empty()) return;
+void Entity::updateBezierTrajectory()
+{
+    if (!followBezier || bezierControlPoints.size() != 4 || bezierRotations.size() != 4)
+        return;
 
-    float speed = 0.005f;
-    glm::vec3 target = trajectoryPoints[currentPointIndex];
-    glm::vec3 direction = target - position;
+    position = cubicBezier(bezierControlPoints[0], bezierControlPoints[1],
+                           bezierControlPoints[2], bezierControlPoints[3], bezierT);
 
-    if (glm::length(direction) < 0.05f) {
-        currentPointIndex = (currentPointIndex + 1) % trajectoryPoints.size();
-    } else {
-        position += glm::normalize(direction) * speed;
-    }
+    rotation = glm::radians(cubicBezier(bezierRotations[0], bezierRotations[1],
+                                        bezierRotations[2], bezierRotations[3], bezierT));
+
+    bezierT += bezierSpeed;
+    if (bezierT > 1.0f)
+        bezierT = 0.0f;
 }
 
 int Entity::loadModelWithTexture(const std::string &objFilePath,
@@ -115,23 +145,28 @@ int Entity::loadModelWithTexture(const std::string &objFilePath,
         std::string prefix;
         ss >> prefix;
 
-        if (prefix == "v") {
+        if (prefix == "v")
+        {
             glm::vec3 pos;
             ss >> pos.x >> pos.y >> pos.z;
             temp_positions.push_back(pos);
         }
-        else if (prefix == "vt") {
+        else if (prefix == "vt")
+        {
             glm::vec2 uv;
             ss >> uv.x >> uv.y;
             temp_uvs.push_back(uv);
         }
-        else if (prefix == "vn") {
+        else if (prefix == "vn")
+        {
             glm::vec3 norm;
             ss >> norm.x >> norm.y >> norm.z;
             temp_normals.push_back(norm);
         }
-        else if (prefix == "f") {
-            for (int i = 0; i < 3; ++i) {
+        else if (prefix == "f")
+        {
+            for (int i = 0; i < 3; ++i)
+            {
                 std::string vertexStr;
                 ss >> vertexStr;
                 std::replace(vertexStr.begin(), vertexStr.end(), '/', ' ');
@@ -147,7 +182,8 @@ int Entity::loadModelWithTexture(const std::string &objFilePath,
     file.close();
 
     std::vector<GLfloat> vertexData;
-    for (size_t i = 0; i < vertexIndices.size(); ++i) {
+    for (size_t i = 0; i < vertexIndices.size(); ++i)
+    {
         glm::vec3 pos = temp_positions[vertexIndices[i]];
         glm::vec2 uv = temp_uvs[uvIndices[i]];
         glm::vec3 norm = temp_normals[normalIndices[i]];
@@ -155,12 +191,16 @@ int Entity::loadModelWithTexture(const std::string &objFilePath,
         vertexData.insert(vertexData.end(), {pos.x, pos.y, pos.z, uv.x, uv.y, norm.x, norm.y, norm.z});
     }
 
-    if (!textureFilePath.empty()) {
+    if (!textureFilePath.empty())
+    {
         outTextureID = loadTexture(textureFilePath);
-        if (outTextureID == 0) {
+        if (outTextureID == 0)
+        {
             std::cerr << "Failed to load texture: " << textureFilePath << std::endl;
         }
-    } else {
+    }
+    else
+    {
         outTextureID = 0;
     }
 
@@ -186,35 +226,42 @@ int Entity::loadModelWithTexture(const std::string &objFilePath,
     return VAO;
 }
 
-void Entity::loadMaterial(const std::string& mtlFilePath) {
+void Entity::loadMaterial(const std::string &mtlFilePath)
+{
     std::ifstream file(mtlFilePath);
-    if (!file.is_open()) {
+    if (!file.is_open())
+    {
         std::cerr << "Failed to open MTL file: " << mtlFilePath << std::endl;
         return;
     }
 
     std::string line;
-    while (std::getline(file, line)) {
+    while (std::getline(file, line))
+    {
         std::istringstream ss(line);
         std::string prefix;
         ss >> prefix;
 
-        if (prefix == "Ka") {
+        if (prefix == "Ka")
+        {
             float r, g, b;
             ss >> r >> g >> b;
             ka = (r + g + b) / 3.0f;
         }
-        else if (prefix == "Kd") {
+        else if (prefix == "Kd")
+        {
             float r, g, b;
             ss >> r >> g >> b;
             kd = (r + g + b) / 3.0f;
         }
-        else if (prefix == "Ks") {
+        else if (prefix == "Ks")
+        {
             float r, g, b;
             ss >> r >> g >> b;
             ks = (r + g + b) / 3.0f;
         }
-        else if (prefix == "Ns") {
+        else if (prefix == "Ns")
+        {
             ss >> shininess;
         }
     }
@@ -237,9 +284,12 @@ GLuint Entity::loadTexture(const std::string &texturePath)
     glGenTextures(1, &textureID);
 
     GLenum format = GL_RGB;
-    if (nrChannels == 1) format = GL_RED;
-    else if (nrChannels == 3) format = GL_RGB;
-    else if (nrChannels == 4) format = GL_RGBA;
+    if (nrChannels == 1)
+        format = GL_RED;
+    else if (nrChannels == 3)
+        format = GL_RGB;
+    else if (nrChannels == 4)
+        format = GL_RGBA;
 
     glBindTexture(GL_TEXTURE_2D, textureID);
     glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
@@ -359,21 +409,35 @@ void Entity::checkCompileErrors(GLuint shader, std::string type)
     }
 }
 
-
-void Entity::draw(const glm::vec3& lightPosition) {
+void Entity::draw(const glm::vec3 &lightPosition)
+{
     glUseProgram(shaderProgram);
 
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, position);
     model = glm::scale(model, glm::vec3(scaleFactor));
-    model = glm::rotate(model, initialRotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-    model = glm::rotate(model, initialRotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-    model = glm::rotate(model, initialRotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
+    if (followBezier)
+    {
+        model = glm::rotate(model, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+    }
+    else
+    {
+        model = glm::rotate(model, initialRotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, initialRotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, initialRotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+    }
+
+    
     float angle = static_cast<float>(glfwGetTime());
-    if (rotateX) model = glm::rotate(model, angle, glm::vec3(1.0f, 0.0f, 0.0f));
-    if (rotateY) model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
-    if (rotateZ) model = glm::rotate(model, angle, glm::vec3(0.0f, 0.0f, 1.0f));
+    if (rotateX)
+        model = glm::rotate(model, angle, glm::vec3(1.0f, 0.0f, 0.0f));
+    if (rotateY)
+        model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+    if (rotateZ)
+        model = glm::rotate(model, angle, glm::vec3(0.0f, 0.0f, 1.0f));
 
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(viewMatrix));
@@ -394,7 +458,6 @@ void Entity::draw(const glm::vec3& lightPosition) {
     glDrawArrays(GL_TRIANGLES, 0, nVertices);
     glBindVertexArray(0);
 }
-
 
 void Entity::toggleRotateX()
 {

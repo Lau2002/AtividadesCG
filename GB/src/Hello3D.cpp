@@ -66,7 +66,8 @@ int main()
 
         for (auto &entity : entities)
         {
-            entity.updateTrajectory();
+        
+            entity.updateBezierTrajectory();
             entity.setViewProjection(view, projection, camera.position);
             entity.draw(lightPos);
         }
@@ -79,35 +80,50 @@ int main()
     return 0;
 }
 
-void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
+{
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
 
-    if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-        if (key == GLFW_KEY_W) camera.processKeyboard('W');
-        if (key == GLFW_KEY_S) camera.processKeyboard('S');
-        if (key == GLFW_KEY_A) camera.processKeyboard('A');
-        if (key == GLFW_KEY_D) camera.processKeyboard('D');
+    if (action == GLFW_PRESS || action == GLFW_REPEAT)
+    {
+        if (key == GLFW_KEY_W)
+            camera.processKeyboard('W');
+        if (key == GLFW_KEY_S)
+            camera.processKeyboard('S');
+        if (key == GLFW_KEY_A)
+            camera.processKeyboard('A');
+        if (key == GLFW_KEY_D)
+            camera.processKeyboard('D');
 
         Entity &selectedEntity = entities[selectedEntityIndex];
 
-        if (key == GLFW_KEY_X) selectedEntity.toggleRotateX();
-        if (key == GLFW_KEY_Y) selectedEntity.toggleRotateY();
-        if (key == GLFW_KEY_Z) selectedEntity.toggleRotateZ();
+        if (key == GLFW_KEY_X)
+            selectedEntity.toggleRotateX();
+        if (key == GLFW_KEY_Y)
+            selectedEntity.toggleRotateY();
+        if (key == GLFW_KEY_Z)
+            selectedEntity.toggleRotateZ();
 
-        if (key == GLFW_KEY_I) selectedEntity.scaleUp();
-        if (key == GLFW_KEY_O) selectedEntity.scaleDown();
+        if (key == GLFW_KEY_I)
+            selectedEntity.scaleUp();
+        if (key == GLFW_KEY_O)
+            selectedEntity.scaleDown();
 
-        if (key == GLFW_KEY_U) selectedEntity.moveForward();
-        if (key == GLFW_KEY_J) selectedEntity.moveBackward();
+        if (key == GLFW_KEY_U)
+            selectedEntity.moveForward();
+        if (key == GLFW_KEY_J)
+            selectedEntity.moveBackward();
 
         if (key == GLFW_KEY_C)
             selectedEntityIndex = (selectedEntityIndex + 1) % entities.size();
     }
 }
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
-    if (firstMouse) {
+void mouse_callback(GLFWwindow *window, double xpos, double ypos)
+{
+    if (firstMouse)
+    {
         lastX = xpos;
         lastY = ypos;
         firstMouse = false;
@@ -121,7 +137,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
     camera.processMouseMovement(xoffset, yoffset);
 }
-
 
 void loadSceneFromJSON(const std::string &jsonFile)
 {
@@ -156,17 +171,13 @@ void loadSceneFromJSON(const std::string &jsonFile)
             glm::vec3(
                 glm::radians(float(obj["rotation"][0])),
                 glm::radians(float(obj["rotation"][1])),
-                glm::radians(float(obj["rotation"][2]))
-            )
-        );
+                glm::radians(float(obj["rotation"][2]))));
 
         if (!obj["trajectory"].get<std::string>().empty())
         {
-            entity.loadTrajectory(obj["trajectory"]);
+            entity.loadBezierControlPoints(obj["trajectory"]);
         }
-
         entity.initialize();
         entities.push_back(entity);
     }
 }
-
